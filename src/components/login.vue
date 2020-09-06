@@ -2,7 +2,7 @@
   <div class="login-main">
     <div class="login-box">
       <div class="user-head">
-        <img src="../assets/logo.png" alt srcset />
+        <img src="../assets/head.jpg" alt srcset />
       </div>
 
       <el-form ref="loginFromRef" :model="loginFrom" label-width="0px" :rules="loginFromRules" class="login-from">
@@ -30,8 +30,8 @@ export default {
   data() {
     return {
       loginFrom: {
-        username: "",
-        password: "",
+        username: "admin",
+        password: "123456",
       },
       loginFromRules: {
         username: [
@@ -61,7 +61,17 @@ export default {
       },
       login() {
           this.$refs.loginFromRef.validate((valid) => {
-              console.log(valid)
+              if(!valid) return
+              this.$http.post('login', this.loginFrom).then(res => {
+                console.log(res.data)
+                if(res.data.meta.status != 200) {
+                  this.$message.error('登录失败') 
+                  return
+                }
+                this.$message({message:'登录成功', type:'success'})
+                window.sessionStorage.setItem('token', res.data.data.token)
+                this.$router.push('/home')
+              })
           })
       }
   },
