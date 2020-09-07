@@ -83,6 +83,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #2b4b6b;
+  background: url('../assets/indexbg.jpg') no-repeat center/cover;
   display: flex;
   justify-content: center;
   align-items: center;

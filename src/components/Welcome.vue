@@ -20,7 +20,7 @@
         font-size: 50px;
         color: #fff;
         text-shadow: 0 0 10px #ddd;
-        background: url('../assets/bg.jpg') no-repeat 50% 50%;
+        background: url('../assets/indexbg1.jpg') no-repeat center/cover;
 
     }
 </style>
