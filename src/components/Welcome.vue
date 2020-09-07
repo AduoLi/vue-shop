@@ -1,6 +1,6 @@
 <template>
     <div class="welcome-ct">
-        <img src="../assets/bg.jpg" alt="" srcset="">
+        <h3>Welcome</h3>
     </div>
 </template>
 
@@ -12,12 +12,15 @@
 
 <style lang="less" scoped>
     .welcome-ct{
+        width: 100%;
+        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        img{
-            display: block;
-            width: 600px;
-        }
+        font-size: 50px;
+        color: #fff;
+        text-shadow: 0 0 10px #ddd;
+        background: url('../assets/bg.jpg') no-repeat 50% 50%;
+
     }
 </style>

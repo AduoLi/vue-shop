@@ -18,6 +18,7 @@
 		  :collapse="isShow"
 		  :collapse-transition = "false"
 		  router
+		  :default-active="this.$route.path"
         >
           <el-submenu :index="item.id + ''" v-for="(item, index) in menusList" :key="item.id">
             <template slot="title">
@@ -125,6 +126,7 @@ export default {
 }
 .el-main {
   background-color: #eaedf1;
+  padding: 0;
 }
 .home-ct {
   width: 100%;
