@@ -15,21 +15,17 @@
           text-color="#fff"
           active-text-color="#409bff"
           unique-opened
-		  :collapse="isShow"
-		  :collapse-transition = "false"
-		  router
-		  :default-active="this.$route.path"
+          :collapse="isShow"
+          :collapse-transition="false"
+          router
+          :default-active="this.$route.path"
         >
           <el-submenu :index="item.id + ''" v-for="(item, index) in menusList" :key="item.id">
             <template slot="title">
               <i :class="iconList[index]"></i>
               <span>{{item.authName}}</span>
             </template>
-            <el-menu-item
-              :index="'/' + item1.path"
-              v-for="item1 in item.children"
-              :key="item1.id"
-            >
+            <el-menu-item :index="'/' + item1.path" v-for="item1 in item.children" :key="item1.id">
               <template slot="title">
                 <i class="el-icon-menu"></i>
                 <span>{{item1.authName}}</span>
@@ -39,8 +35,8 @@
         </el-menu>
       </el-aside>
       <el-main>
-		  <router-view></router-view>
-	  </el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -56,8 +52,8 @@ export default {
         "iconfont icon-shangpin",
         "iconfont icon-danju",
         "iconfont icon-baobiao",
-	  ],
-	  isShow:false
+      ],
+      isShow: false,
     };
   },
   created() {
@@ -75,10 +71,10 @@ export default {
         this.menusList = res.data.data;
         console.log(this.menusList);
       });
-	},
-	toggleCollapse() {
-		this.isShow = !this.isShow
-	}
+    },
+    toggleCollapse() {
+      this.isShow = !this.isShow;
+    },
   },
 };
 </script>

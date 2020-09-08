@@ -9,12 +9,12 @@
     <el-card>
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入内容">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList">
+            <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary">添加用户</el-button>
+          <el-button type="primary" @click="dialogVisible = true">添加用户</el-button>
         </el-col>
       </el-row>
 
@@ -50,12 +50,49 @@
         :total="total"
       ></el-pagination>
     </el-card>
+
+    <el-dialog title="添加用户" :visible.sync="dialogVisible" width="50%">
+      <el-form :model="addForm" :rules="addRules" ref="ruleFormRef" label-width="70px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="mobile">
+          <el-input v-model="addForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="adduser">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
   data() {
+    //验证邮箱
+    let checkEmail = (rule, value, cb) => {
+      let regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
+      if(regEmail.test(value)) {
+        return cb()
+      }
+      cb(new Error('请输入合法邮箱'))
+    }
+    //验证手机号
+    let checkMobile =(rule, value, cb) => {
+      let regMobile = /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/
+      if(regMobile.test(value)) {
+        return cb()
+      }
+      cb(new Error('请输入合法手机号'))
+    }
     return {
       //获取用户对象参数
       queryInfo: {
@@ -65,6 +102,41 @@ export default {
       },
       userList: [],
       total: 0,
+      dialogVisible: false,
+      addForm: {
+        username:'',
+        password:'',
+        email:'',
+        mobile:''
+      },
+      addRules: {
+        username: [
+          { required: true, message: "请输入名称", trigger: "blur" },
+          {
+            min: 3,
+            max: 10,
+            message: "长度在 3 到 10 个字符",
+            trigger: "blur",
+          },
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 15,
+            message: "长度在 6 到 15 个字符",
+            trigger: "blur",
+          },
+        ],
+        email: [
+          { required: true, message: "请输入邮箱", trigger: "blur" },
+          { validator: checkEmail, trigger: 'blur' }
+        ],
+        mobile: [
+          { required: true, message: "请输入手机", trigger: "blur" },
+          { validator: checkMobile, trigger: 'blur' }
+        ],
+      },
     };
   },
   created() {
@@ -81,26 +153,40 @@ export default {
         this.total = res.data.data.total;
         console.log("用户列表：", this.userList);
       });
-	},
-	handleSizeChange(newPage) {
-		this.queryInfo.pagesize = newPage
-		this.getUserList()
-	},
-	handleCurrentChange(cueePage) {
-		this.queryInfo.pagenum = cueePage
-		this.getUserList()
-	},
-	changeUserState(currData) {
-		console.log(currData)
-		this.$http.put(`users/${currData.id}/state/${currData.mg_state}`).then(res => {
-			if(res.data.meta.status !== 200) {
-				this.$message.error("更新用户状态失败！")
-				return
-			}
-			this.$message.success("更新用户状态成功！")
-		})
-	}
+    },
+    handleSizeChange(newPage) {
+      this.queryInfo.pagesize = newPage;
+      this.getUserList();
+    },
+    handleCurrentChange(cueePage) {
+      this.queryInfo.pagenum = cueePage;
+      this.getUserList();
+    },
+    changeUserState(currData) {
+      console.log(currData);
+      this.$http
+        .put(`users/${currData.id}/state/${currData.mg_state}`)
+        .then((res) => {
+          if (res.data.meta.status !== 200) {
+            this.$message.error("更新用户状态失败！");
+            return;
+          }
+          this.$message.success("更新用户状态成功！");
+        });
+    },
+    adduser() {
+      // 
+      // console.log(this.addForm)
+      this.$http.post('users', this.addForm).then(res => {
+        if(res.data.meta.status !== 201) {
+          this.$message.error(res.data.meta.msg)
+          return
+        }
+        this.dialogVisible = false
+        this.$message.success(res.data.meta.msg)
+      })
 
+    }
   },
 };
 </script>
@@ -111,7 +197,10 @@ export default {
 .el-row {
   margin-bottom: 20px;
 }
-.el-pagination{
-	margin-top: 20px;
+.el-pagination {
+  margin-top: 20px;
+}
+.el-dialog .el-dialog__header {
+  text-align: center;
 }
 </style>
