@@ -98,7 +98,7 @@ export default {
       queryInfo: {
         query: "", //查询参数
         pagenum: 1, //当前页码
-        pagesize: 2, //每页显示条数
+        pagesize: 10, //每页显示条数
       },
       userList: [],
       total: 0,
@@ -184,6 +184,7 @@ export default {
         }
         this.dialogVisible = false
         this.$message.success(res.data.meta.msg)
+        this.getUserList()
       })
 
     }
