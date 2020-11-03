@@ -37,7 +37,7 @@ export default {
         username: [
           { required: true, message: "请输入名称", trigger: "blur" },
           {
-            min: 3,
+            min: 2,
             max: 10,
             message: "长度在 3 到 10 个字符",
             trigger: "blur",
